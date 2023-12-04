@@ -1,0 +1,15 @@
+# Base image - Add the text openjdk:8-jdk-alpine after the FROM keyword
+FROM 
+
+VOLUME /tmp
+
+ARG JAR_FILE
+
+ARG PORT
+
+# Copy the jar file from target to the container
+
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+
+# Add the port number 8090 after the EXPOSE keyword
+EXPOSE 
