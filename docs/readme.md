@@ -16,18 +16,17 @@ You require a K8s cluster - use any of the following options per your convenienc
 
 - Option1 (Recommended): On Azure – Install an [AKS](https://learn.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-portal?tabs=azure-cli) cluster with minimal configuration (e.g. single node D4s) – do NOT deploy the application mentioned in the documentation
 
+- Option2: On Windows with WSL2 – [Kubernetes engine provided by Docker Desktop](https://docs.docker.com/desktop/kubernetes/)  or [KIND](https://kind.sigs.k8s.io/docs/user/quick-start/)
+		
+- Option3: On Linux – [KIND](https://kind.sigs.k8s.io/docs/user/quick-start/)  or [K3s](https://docs.k3s.io/quick-start)
+
+
 ### 3. Container Registry
 You will need a Container registry for the container images.
 - On Azure – Provision an Azure Container Registry (ACR) resource – [link](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal?tabs=azure-cli)
 		
 OR
 - On Docker hub – Create an [account](https://hub.docker.com/) if you do not already have one
-
-
-- Option2: On Windows with WSL2 – [Kubernetes engine provided by Docker Desktop](https://docs.docker.com/desktop/kubernetes/)  or [KIND](https://kind.sigs.k8s.io/docs/user/quick-start/)
-		
-- Option3: On Linux – [KIND](https://kind.sigs.k8s.io/docs/user/quick-start/)  or [K3s](https://docs.k3s.io/quick-start)
-
 ## Container Fundamentals
 
 Reference: [How containers work](https://learn.microsoft.com/en-us/virtualization/windowscontainers/about/#how-containers-work)
