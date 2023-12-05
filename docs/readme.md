@@ -330,3 +330,57 @@ Deploy redis to a different namespace and make the ping service work with that c
         http://{pong-service-public-ip}:9090/pong/{key}
 
 ### 14. Service Accounts and Volumes
+
+Reference: Kubernetes [Service Accounts](https://kubernetes.io/docs/concepts/security/service-accounts/#what-are-service-accounts), [Volumes](https://kubernetes.io/docs/concepts/storage/volumes/), 
+
+Now, you will add a ServiceAccount to the PingApi Pod and project the token as a volume
+
+#### 14a. Activity: Create a Service Account
+
+        Source Path: src/k8s/2.ping
+        Files: serviceAccount.yaml, pod.yaml
+
+- Create a new manifest serviceAccount.yaml with the following content
+
+        # Ping API ServiceAccount
+        
+        apiVersion: v1
+        kind: ServiceAccount
+        metadata:
+          name: pingapisa
+          namespace: pingpong
+                
+
+- Update the pod.yaml of ping api to project the service account
+
+        .....
+        serviceAccountName: pingapisa
+
+        .....
+        volumeMounts:
+          - name: ping-psat
+            mountPath: /var/run/secrets
+
+        .....
+
+        volumes:
+        - name: ping-psat
+          projected:
+            sources:
+            - serviceAccountToken:
+                path: ping
+                expirationSeconds: 3600
+
+- Submit the manifests
+
+        kubectl -n pingpong create -f ./serviceAccount.yaml
+        kubectl -n pingpong delete -f ./pod.yaml
+        kubectl -n pingpong create -f ./pod.yaml
+
+- View the PSAT
+
+        kubectl -n pingpong exec -it ping -- cat /var/run/secrets/pingapi
+
+- Copy the token and view its content - [jwt.ms](https://jwt.ms)
+
+![Alt text](psat.jpg)

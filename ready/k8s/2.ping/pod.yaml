@@ -3,10 +3,11 @@ kind: Pod
 metadata: 
   labels:
       name: ping
-      tier: 
+      tier: frontend
   name: pingapi
   namespace: pingpong
 spec:
+  serviceAccountName: pingapisa
   containers:
   - env:
     - name: SERVER_PORT
@@ -17,7 +18,7 @@ spec:
       value: redis
     - name: CACHE_PORT
       value: "6379"
-    image: 
+    image: kumsub/ping:v1
     imagePullPolicy: IfNotPresent
     name: ping
     ports:
@@ -25,4 +26,13 @@ spec:
       name: tcp
       protocol: TCP
     resources: {}
-
+    volumeMounts:
+    - name: ping-psat
+      mountPath: /var/run/secrets
+  volumes:
+  - name: ping-psat
+    projected:
+      sources:
+      - serviceAccountToken:
+          path: ping
+          expirationSeconds: 3600
