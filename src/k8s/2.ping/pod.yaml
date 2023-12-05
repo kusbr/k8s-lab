@@ -17,7 +17,7 @@ spec:
       value: redis
     - name: CACHE_PORT
       value: "6379"
-    image: kumsub/ping:v1
+    image: 
     imagePullPolicy: IfNotPresent
     name: ping
     ports:

@@ -221,7 +221,31 @@ Verify if the pod is created and see the container logs
 
         http://{pod ip}:8090/ping/1
 
-### Activity 9. Deploy a K8s service for the Ping Api
+### 9. Activity: Image Pull Credentials
+If your container images are in a private regisry such as ACR, Kubernetes will need the permission to pull the images during pod scheduling. There are multiple scenario based options:
+
+#### Option1: AKS Attach - Attach AKS Cluster to ACR
+- [Existing AKS Cluster](https://learn.microsoft.com/en-us/azure/aks/cluster-container-registry-integration?toc=%2Fazure%2Fcontainer-registry%2Ftoc.json&bc=%2Fazure%2Fcontainer-registry%2Fbreadcrumb%2Ftoc.json&tabs=azure-cli#configure-acr-integration-for-an-existing-aks-cluster)
+
+- [New AKS Cluster](https://learn.microsoft.com/en-us/azure/aks/cluster-container-registry-integration?toc=%2Fazure%2Fcontainer-registry%2Ftoc.json&bc=%2Fazure%2Fcontainer-registry%2Fbreadcrumb%2Ftoc.json&tabs=azure-cli#tabpanel_2_azure-cli)
+
+#### Option2: CR Credentials
+Store the CR credentials in a K8s Secret and use the secret as ImagePullSecret in the manifest
+
+- Create K8s [Secret](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line)
+
+- Update the pod.yaml / deployment.yaml to use the secret in the spec
+
+        imagePullSecrets:
+        - name: {K8s secret name that has the CR creds}
+
+#### Option3: Azure MSI based Workload Identity
+We will not try this option as part of this lab. You can do this as part of your post lab learning
+- [AKS MSI](https://learn.microsoft.com/en-us/azure/aks/use-managed-identity)
+
+- [AcrPull Role](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-roles?tabs=azure-cli#pull-image) - Assign to MSI
+
+### Activity 10. Deploy a K8s service for the Ping Api
 
 Reference: [Kubernetes Service](https://kubernetes.io/docs/concepts/services-networking/service/)
 
@@ -260,7 +284,7 @@ Reference: [Kubernetes Service](https://kubernetes.io/docs/concepts/services-net
 
         kubectl logs -f pingapi -n pingpong
 
-### 10. Activity: Deploy the Cache DB
+### 11. Activity: Deploy the Cache DB
 
 Reference: [Kubernetes Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), [ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 
@@ -287,7 +311,7 @@ Reference: [Kubernetes Deployment](https://kubernetes.io/docs/concepts/workloads
 
 - Check the ping service http://<external-ip>:8090/ping/1
 
-### 11. Optional Activity:  Cross Namespace Service Access
+### 12. Optional Activity:  Cross Namespace Service Access
 
 Deploy redis to a different namespace and make the ping service work with that cache
 
@@ -296,7 +320,7 @@ Deploy redis to a different namespace and make the ping service work with that c
 
         Hint: Access pattern: {servicename}.{ns}.svc:port
 
-### 12. Activity: Deploy the Pong Service
+### 13. Activity: Deploy the Pong Service
 
         Source Path: src/k8s/4.pong
 
@@ -305,3 +329,4 @@ Deploy redis to a different namespace and make the ping service work with that c
 
         http://{pong-service-public-ip}:9090/pong/{key}
 
+### 14. Service Accounts and Volumes
