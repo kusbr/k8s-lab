@@ -3,7 +3,7 @@ kind: Pod
 metadata: 
   labels:
       name: ping
-      tier: frontend
+      tier: 
   name: pingapi
   namespace: pingpong
 spec:
