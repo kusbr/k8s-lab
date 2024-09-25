@@ -448,7 +448,7 @@ Now, you will add a ServiceAccount to the PingApi Pod and project the token as a
 #### 14a. Create a Service Account
 
         Source Path: src/k8s/2.ping
-        Files: serviceAccount.yaml, pod.yaml
+        Files: serviceAccount.yaml, deployment.yaml
 
 - Create a new manifest serviceAccount.yaml with the following content
 
@@ -461,7 +461,7 @@ Now, you will add a ServiceAccount to the PingApi Pod and project the token as a
           namespace: pingpong
                 
 
-- Update the pod.yaml of ping api to project the service account
+- Update the deployment.yaml of ping api to project the service account
 
         .....
         serviceAccountName: pingapisa
@@ -483,9 +483,14 @@ Now, you will add a ServiceAccount to the PingApi Pod and project the token as a
 
 - Submit the manifests
 
-        kubectl -n pingpong create -f ./serviceAccount.yaml
-        kubectl -n pingpong delete -f ./pod.yaml
-        kubectl -n pingpong create -f ./pod.yaml
+    - Service
+        
+            kubectl -n pingpong create -f ./serviceAccount.yaml
+        
+        
+     - Deployment
+        
+            kubectl -n pingpong apply -f ./deployment.yaml
 
 - View the PSAT
 
