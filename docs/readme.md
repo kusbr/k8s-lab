@@ -199,7 +199,7 @@ Once the pong container is ready, the app can be accessed at
            docker run --rm pingtest <pingservice CR imagename>
 
 ## Kubernetes Fundamentals
-
+Reference: [Kubernetes Architecture](https://kubernetes.io/docs/concepts/architecture/)
 ### Sample Kubernetes Solution 
 ![K8s Solution](k8s-samplesolution.png)
 
