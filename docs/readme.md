@@ -1,4 +1,4 @@
-# Kubernetes Basics Workshop
+# Containers and Kubernetes Basics Workshop
 
 ## Synopsis
 In this workshop, you will understand the fundamentals of containers and kubernetes by doing few simple handson exercises using Docker and Kubernetes.
