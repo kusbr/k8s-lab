@@ -5,7 +5,7 @@ metadata:
       name: ping
       tier: 
   name: pingapi
-  namespace: pingpong
+  namespace: {namespace name}
 spec:
   containers:
   - env:
@@ -17,7 +17,7 @@ spec:
       value: redis
     - name: CACHE_PORT
       value: "6379"
-    image: 
+    image: {pingservice imagename}
     imagePullPolicy: IfNotPresent
     name: ping
     ports:
