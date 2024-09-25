@@ -414,7 +414,7 @@ Reference: [Kubernetes Pods](https://kubernetes.io/docs/concepts/workloads/pods/
  
           http://<external-ip>:8090/ping/1
 
-        - Note: Due to security hardening MS tenant AKS resources will need more configuration to access the service publicly. If you are unable to access the external-ip then do port-forwarding as described for local Kubernetes 
+        - Note: Due to security policies in few Azure tenants, AKS resources will need more configuration to access the service publicly. If you are unable to access the external-ip then do port-forwarding as described for local Kubernetes 
 
     - Local Kubernetes (DockerDesktop)
 
@@ -437,7 +437,7 @@ Reference: [Kubernetes Pods](https://kubernetes.io/docs/concepts/workloads/pods/
         http://{pong-service-public-ip}:9090/pong/{key}
 
 
-   - Note: Due to security hardening MS tenant AKS resources will need more configuration to access the service publicly. If you are unable to access the external-ip then do port-forwarding as described for local Kubernetes 
+   - Note: Due to security policies in few Azure tenants, AKS resources will need more configuration to access the service publicly. If you are unable to access the external-ip then do port-forwarding as described for local Kubernetes 
 
 ### 14. Service Accounts and Volumes
 
