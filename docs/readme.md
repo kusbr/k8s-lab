@@ -282,7 +282,7 @@ Store the CR credentials in a K8s Secret and use the secret as ImagePullSecret i
 
 - Create K8s [Secret](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line)
 
-- Update the pod.yaml / deployment.yaml to use the secret in the spec
+- Update the deployment.yaml to use the secret in the spec
 
         imagePullSecrets:
         - name: {K8s secret name that has the CR creds}
