@@ -224,10 +224,12 @@ Reference: [namespaces](https://kubernetes.io/docs/concepts/overview/working-wit
         Source Path: src/k8s/1.namespace/
         File: ns.yaml
 
-Use kubernetes CLI kubectl to create a new namespace "pingpong"
-
+Use kubernetes CLI (kubectl) to
+- Create a new namespace "pingpong"
+        
         kubectl create -f ns.yaml
-
+- Verify
+        
         kubectl get ns
 
 ### 8. Activity: Deploy the Pod for Ping App
@@ -242,11 +244,18 @@ You will deploy the ping app using a "pod" manifest
 - Modify the pod.yaml to set the docker image name for the container and the namespace
 
 - Schedule the ping pod. 
-Verify if the pod is created and see the container logs
 
         kubectl create -f pod.yaml -n pingpong
 
+- Verify if the pod is created
+
         kubectl get pods -n pingpong
+
+- See the container logs
+
+        kubectl -n pingpong logs <name of the ping pod>
+   
+- Describe the pod
 
         kubectl -n pingpong describe pod pingapi
 
@@ -285,37 +294,75 @@ Reference: [Kubernetes Service](https://kubernetes.io/docs/concepts/services-net
         Source path: src/k8s/2.ping
         File: service.yaml
 
-- Modify the service.yaml to set the service type to "LoadBalancer", and submit the manifest to the K8s cluster
+- 10a. Modify the service.yaml 
+
+    - AKS
+
+        - Set the service type to "LoadBalancer"
+
+    - Local Kubernetes w/o LB (DockerDesktop or KIND)
+
+        - No changes needed 
+        - Service type will be "ClusterIP"
+
+- 10b. Deploy the K8s service for ping pod
 
         kubectl -n pingpong create -f service.yaml
 
+- 10c. Verify Service
+        
         kubectl -n pingpong get services
 
-        Note: Wait for the external IP (in case of AKS) to be available
+    - Note: Wait for the external IP (in case of AKS/ MetaLB or or such platform LB) to be available
 
-- Describe the service to check if it is bound to the container endpoint
+### 11. Activity: Access Ping API using the K8s service
+
+- 11a. Access the ping api using the K8s service's IP
+
+    - AKS
+        
+          http://<external-ip>:8090/ping/1
+
+    - Local Kubernetes 
+
+        1. Port forward the ClusterIP service to local network
+
+                kubectl -n pingpong port-forward service/pingservice 8090:8090
+
+        2. Access locally
+
+                http://localhost:8090/ping/1
+
+- 11b. Let's get inside the ping container and access the api endpoint locally
+
+    - Grab the main container shell
+        
+           kubectl exec -ti pingapi -n pingpong -- /bin/sh
+
+    - cUrl 
+
+           curl http://localhost:8090/ping/1
+
+    - wget
+     
+           wget http://localhost:8090/ping/1
+
+- 11c. Describe the service to check if it is bound to the container endpoint
 
         kubectl -n pingpong describe service pingservice
 
-- If the EndPoints value is None, no container is bound to the service and no routing will happen for the service IP  
+    - If the EndPoints value is None, no container is bound to the service and no routing will happen for the service IP  
 
-- Update the pingapi pod.yaml metadata to set the tier label  to "frontend"
+- 11d Update the pingapi pod.yaml metadata to set the tier label  to "frontend"
 
         kubectl -n pingpong apply -f pod.yaml
 
-- Access the ping api using the service's public endpoint
-
-        http://<external-ip>:8090/ping/1
-
-- Let's get inside the ping container and access the api endpoint locally
-
-        kubectl exec -ti pingapi -n pingpong -- /bin/sh
-
-        wget http://localhost:8090/ping/1
         
 - Check the pod logs
 
         kubectl logs -f pingapi -n pingpong
+
+- Access the ping service
 
 ### 11. Activity: Deploy the Cache DB
 
