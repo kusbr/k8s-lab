@@ -72,11 +72,12 @@ Reference:  [Dockerfile](https://docs.docker.com/engine/reference/builder/#from)
         docker build -t pong:local -f ./dockerfile --build-arg JAR_FILE="./apps/pong.jar" --build-arg PORT="9090" . 
 
 - Check if the images are listed
-
-        Linux
+  - Linux
+        
         docker images | grep "local"
 
-        Windows
+  - Windows
+       
         docker images | findstr "local"
 
 Reference: [Docker build](https://docs.docker.com/engine/reference/commandline/build/), [image tag](https://docs.docker.com/engine/reference/commandline/build/#tag), [--build-arg](https://docs.docker.com/engine/reference/commandline/build/#build-arg), [build context](https://docs.docker.com/build/building/context/)
@@ -117,60 +118,92 @@ Reference: [Docker build](https://docs.docker.com/engine/reference/commandline/b
 
         localhost:8090/ping/1
 
-- Delete the ping and redis docker containers
+- Invoke the ping api once more and set a new key
 
-        docker rm -f ping
-        docker rm -f redis
+        localhost:8090/ping/2
 
-#### 4d: Optional - Try similar steps for pong container
 
-        Once the pong container is ready, the app can be accessed at localhost:9090/pong/{key}
+#### 4d: Try similar steps for the pong container
+
+Once the pong container is ready, the app can be accessed at 
+
+- key 1
+
+        localhost:9090/pong/1
+
+- key 2
+
+        localhost:9090/pong/1
+
+#### 4e: Clean up
+
+- Delete the containers
+
+        docker rm -f ping pong redis
+
+- Delete the docker network
+
+        docker network rm test
 
 ### 5. Container Registry
 
-#### 5a-i. Activity: Docker Hub
+#### 5a. Login to Container Registry
 
-- Login to docker hub
+- Docker Hub 
 
-        docker login -u <username>
+        docker login -u <your dockerhub username>
 
-OR
+**OR**
 
-#### 5a-ii. Activity: Azure Container Registry (ACR)
+- Azure Container Registry (ACR)
 
-- Create an ACR resource in Azure if you have not alrady created as part of pre-requisites - [Link](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal?tabs=azure-cli)
+    - If you have not completed the prerequisites 
+    
+        - [Create New ACR](https://learn.microsoft.com/en-us/azure/aks/cluster-container-registry-integration?tabs=azure-cli#create-a-new-acr)
+        
+        - [Create New AKS with access to the ACR](https://learn.microsoft.com/en-us/azure/aks/cluster-container-registry-integration?tabs=azure-cli#create-a-new-aks-cluster-and-integrate-with-an-existing-acr)
+
+    - If you created AKS without a new ACR OR want o use an existing ACR
+
+       - [Attach an AKS resoure to existing ACR](https://learn.microsoft.com/en-us/azure/aks/cluster-container-registry-integration?tabs=azure-cli#attach-an-acr-to-an-existing-aks-cluster)
+
 
 - Login to ACR using Az CLI
 
-        az acr login -n <name of acr>
+       az acr login -n <name of acr>
 
 #### 5b. Tag and Push Images to Container Registry
 
-- Tag
+- Image Name    
+    -   Dockerhub 
+        
+             docker.io/<your dockerhub username>/ping:v1
+             docker.io/<your dockerhub username>/pong:v1
+   -   Azure CR 
+        
+            <acrname>.azurecr.io/ping:v1
+            <acrname>.azurecr.io/pong:v1
+- Tag and Push 
+   - Tag
 
-        docker tag ping:local <cr full name>/ping:v1
-        docker tag pong:local <cr full name>/pong:v1
+         docker tag ping:local <imagename>
+         docker tag pong:local <imagename>
+   - Push
+         
+         docker push <imagename>
 
-- Push to CR
 
-        docker push <cr full name>/ping:v1
-        docker push <cr full name>/pong:v1
-
-#### 5c. Pull / Run a CR image
-
-        docker pull <cr full name>/ping:v1
-
-        e.g.    docker pull docker.io/kumsub/ping:v1
-                docker pull acrlabdev.azurecr.io/ping:v1
-
-        docker run --rm pingtest <cr full name>/ping:v1
+#### 5c. Test Run using CR image
+-    Check if the container starts (error messages for n/a of redis is OK )
+        
+           docker run --rm pingtest <pingservice CR imagename>
 
 ## Kubernetes Fundamentals
 
 ### Sample Kubernetes Solution 
 ![K8s Solution](k8s-samplesolution.png)
 
-### 6. Activity: Kubernetes Cluster Context
+### 6. Kubernetes Cluster Context
 
 #### 6a. If you are using Kubernetes engine provided by Docker-Desktop on Windows WSL2, then set the context to the local cluster "docker-desktop"
 
@@ -184,7 +217,7 @@ OR
 
         kubectl config get-contexts
 
-### 7. Activity: Create a kubernetes namespace
+### 7. Create a kubernetes namespace
 
 Reference: [namespaces](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 
@@ -197,7 +230,7 @@ Use kubernetes CLI kubectl to create a new namespace "pingpong"
 
         kubectl get ns
 
-### 8. Activity: Deploy the Pod for Ping App
+### 8. Deploy the Pod for Ping App
 
 Reference: [Kubernetes Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
 
@@ -221,7 +254,7 @@ Verify if the pod is created and see the container logs
 
         http://{pod ip}:8090/ping/1
 
-### 9. Activity: Image Pull Credentials
+### 9. Image Pull Credentials
 If your container images are in a private regisry such as ACR, Kubernetes will need the permission to pull the images during pod scheduling. There are multiple scenario based options:
 
 #### Option1: AKS Attach - Attach AKS Cluster to ACR
@@ -284,7 +317,7 @@ Reference: [Kubernetes Service](https://kubernetes.io/docs/concepts/services-net
 
         kubectl logs -f pingapi -n pingpong
 
-### 11. Activity: Deploy the Cache DB
+### 11. Deploy the Cache DB
 
 Reference: [Kubernetes Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), [ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 
@@ -311,7 +344,7 @@ Reference: [Kubernetes Deployment](https://kubernetes.io/docs/concepts/workloads
 
 - Check the ping service http://<external-ip>:8090/ping/1
 
-### 12. Optional Activity:  Cross Namespace Service Access
+### 12. Optional  Cross Namespace Service Access
 
 Deploy redis to a different namespace and make the ping service work with that cache
 
@@ -320,7 +353,7 @@ Deploy redis to a different namespace and make the ping service work with that c
 
         Hint: Access pattern: {servicename}.{ns}.svc:port
 
-### 13. Activity: Deploy the Pong Service
+### 13. Deploy the Pong Service
 
         Source Path: src/k8s/4.pong
 
@@ -335,7 +368,7 @@ Reference: Kubernetes [Service Accounts](https://kubernetes.io/docs/concepts/sec
 
 Now, you will add a ServiceAccount to the PingApi Pod and project the token as a volume
 
-#### 14a. Activity: Create a Service Account
+#### 14a. Create a Service Account
 
         Source Path: src/k8s/2.ping
         Files: serviceAccount.yaml, pod.yaml
