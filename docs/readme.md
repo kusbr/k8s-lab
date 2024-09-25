@@ -232,24 +232,30 @@ Use kubernetes CLI (kubectl) to
         
         kubectl get ns
 
-### 8. Activity: Deploy the Pod for Ping App
+### 8. Activity: Deploy the Ping App
 
-Reference: [Kubernetes Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
+Reference: [Kubernetes Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), [ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 
 You will deploy the ping app using a "pod" manifest
 
         Source path: src/k8s/2.ping/
-        File: pod.yaml
+        File: deployment.yaml
 
-- Modify the pod.yaml to set the docker image name for the container and the namespace
+- Modify the deployment.yaml to set the docker image name for the container and the namespace
 
-- Schedule the ping pod. 
+- Schedule the ping deployment. 
 
         kubectl create -f pod.yaml -n pingpong
 
-- Verify if the pod is created
+- Verify if the deployment and pod resources are created
 
-        kubectl get pods -n pingpong
+    - pingapi Deployment resource
+
+          kubectl get deployments -n pingpong
+
+    - pingapi Pod resource
+
+          kubectl get pods -n pingpong
 
 - See the container logs
 
@@ -366,18 +372,32 @@ You should see the endpoint is accessible (though the it returns 500 status code
     - Dont forget to port-forward in the case of local kubernetes
     - Should see response (although it is 500)
 
+- 11g. Scale the deployment 
+
+    - Scale to 3 pods
+
+          kubectl -n pingpong scale deployment pingapi --replicas=3
+
+    - Verify
+
+          kubectl -n pingpong get pods
+
+    - Replicaset
+          
+          kubectl -n pingpong get rs
+
 ### 12. Activity: Deploy the Cache DB
 
 #### Lets fix the 500 status code - you guessed right, we need the redis service.
 
-Reference: [Kubernetes Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), [ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
+Reference: [Kubernetes Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
 
         Source Path: src/k8s/3.cache
-        Files: deployment.yaml, service.yaml
+        Files: pod.yaml, service.yaml
 
-- 12a. Submit a redis deployment and a internal service to the cluster
+- 12a. Submit a redis pod scheduling and an internal service to the cluster
 
-    - Create deploynent
+    - Create pod and service
         
             kubectl -n pingpong create -f ./
     - Verify Pod
@@ -389,18 +409,12 @@ Reference: [Kubernetes Deployment](https://kubernetes.io/docs/concepts/workloads
 
         Note: No external IP for redis service, refer our [architecture diagram](../docs/k8s-samplesolution.png)
 
-- 12b. Scale the cache replicasets to 3 replicas
-
-        kubectl -n pingpong scale deployment redis --replicas=3
-
-        kubectl -n pingpong get rs 
-
-        kubectl -n pingpong get pods
-
 - 12c. Check the ping service
     - AKS
  
           http://<external-ip>:8090/ping/1
+
+        - Note: Due to security hardening MS tenant AKS resources will need more configuration to access the service publicly. If you are unable to access the external-ip then do port-forwarding as described for local Kubernetes 
 
     - Local Kubernetes (DockerDesktop)
 
@@ -421,6 +435,9 @@ Reference: [Kubernetes Deployment](https://kubernetes.io/docs/concepts/workloads
 - Check if the pong service is accessible
 
         http://{pong-service-public-ip}:9090/pong/{key}
+
+
+   - Note: Due to security hardening MS tenant AKS resources will need more configuration to access the service publicly. If you are unable to access the external-ip then do port-forwarding as described for local Kubernetes 
 
 ### 14. Service Accounts and Volumes
 
