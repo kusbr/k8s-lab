@@ -522,3 +522,11 @@ Reference: [Ingress](https://kubernetes.io/docs/concepts/services-networking/ing
 #### Options:
 - [NGINX Ingress](https://kubernetes.github.io/ingress-nginx/user-guide/basic-usage/)
 - [Azure Application Gateway ](https://learn.microsoft.com/en-us/azure/application-gateway/ingress-controller-overview)
+
+### 17. Cleanup
+
+- Delete the namespace
+
+	  	kubectl delete ns pingpong
+
+- Delete any Azure reources that you do not need specifically provisioned for this workshop
