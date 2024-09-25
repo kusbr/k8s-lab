@@ -34,7 +34,7 @@ Reference: [How containers work](https://learn.microsoft.com/en-us/virtualizatio
 #### Sample Docker Solution
 ![Docker Solution](docker-solution.png)
 
-### 4. Activity1: Containerize a simple web application
+### 4. Activity: Containerize a simple web application
 
 In this activity you will modify the Dockerfile and build container images using Docker for the Ping and Pong Services. You will use the same Dockerfile for both the services and add the specifics such as executable and port number through build arguments.
 
@@ -147,7 +147,7 @@ Once the pong container is ready, the app can be accessed at
 
 ### 5. Container Registry
 
-#### 5a. Login to Container Registry
+#### 5a. Activity: Login to Container Registry
 
 - Docker Hub 
 
@@ -183,7 +183,7 @@ Once the pong container is ready, the app can be accessed at
         
             <acrname>.azurecr.io/ping:v1
             <acrname>.azurecr.io/pong:v1
-- Tag and Push 
+-  Activity: Tag and Push 
    - Tag
 
          docker tag ping:local <imagename>
@@ -203,7 +203,7 @@ Once the pong container is ready, the app can be accessed at
 ### Sample Kubernetes Solution 
 ![K8s Solution](k8s-samplesolution.png)
 
-### 6. Kubernetes Cluster Context
+### 6. Activity: Set Kubernetes Cluster Context
 
 #### 6a. If you are using Kubernetes engine provided by Docker-Desktop on Windows WSL2, then set the context to the local cluster "docker-desktop"
 
@@ -217,7 +217,7 @@ Once the pong container is ready, the app can be accessed at
 
         kubectl config get-contexts
 
-### 7. Create a kubernetes namespace
+### 7. Activity: Create a kubernetes namespace
 
 Reference: [namespaces](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 
@@ -230,7 +230,7 @@ Use kubernetes CLI kubectl to create a new namespace "pingpong"
 
         kubectl get ns
 
-### 8. Deploy the Pod for Ping App
+### 8. Activity: Deploy the Pod for Ping App
 
 Reference: [Kubernetes Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
 
@@ -278,7 +278,7 @@ We will not try this option as part of this lab. You can do this as part of your
 
 - [AcrPull Role](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-roles?tabs=azure-cli#pull-image) - Assign to MSI
 
-### Activity 10. Deploy a K8s service for the Ping Api
+### 10.  Activity: Deploy a K8s service for the Ping Api
 
 Reference: [Kubernetes Service](https://kubernetes.io/docs/concepts/services-networking/service/)
 
@@ -317,7 +317,7 @@ Reference: [Kubernetes Service](https://kubernetes.io/docs/concepts/services-net
 
         kubectl logs -f pingapi -n pingpong
 
-### 11. Deploy the Cache DB
+### 11. Activity: Deploy the Cache DB
 
 Reference: [Kubernetes Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), [ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 
