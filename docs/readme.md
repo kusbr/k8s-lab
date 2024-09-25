@@ -31,6 +31,10 @@ OR
 
 Reference: [How containers work](https://learn.microsoft.com/en-us/virtualization/windowscontainers/about/#how-containers-work)
 
+Isolation: 
+- Linux: [chroot, namespaces, cgroups](https://containers-v2.holt.courses/lessons/crafting-containers-by-hand/chroot)
+- Windows: [Process, Hyper-V](https://learn.microsoft.com/en-us/virtualization/windowscontainers/manage-containers/hyperv-container)
+
 #### Sample Docker Solution
 ![Docker Solution](docker-solution.png)
 
