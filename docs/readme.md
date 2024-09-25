@@ -133,7 +133,7 @@ Once the pong container is ready, the app can be accessed at
 
 - key 2
 
-        localhost:9090/pong/1
+        localhost:9090/pong/2
 
 #### 4e: Clean up
 
@@ -253,7 +253,7 @@ You will deploy the ping app using a "pod" manifest
 
 - See the container logs
 
-        kubectl -n pingpong logs <name of the ping pod>
+        kubectl -n pingpong logs pingapi
    
 - Describe the pod
 
@@ -339,13 +339,14 @@ Reference: [Kubernetes Service](https://kubernetes.io/docs/concepts/services-net
         
            kubectl exec -ti pingapi -n pingpong -- /bin/sh
 
-    - cUrl 
+    - cUrl OR wget
 
-           curl http://localhost:8090/ping/1
+    -       curl http://localhost:8090/ping/1
 
-    - wget
-     
+    -      
            wget http://localhost:8090/ping/1
+
+You should see the endpoint is accessible (though the it returns 500 status code - we will RCA and fix this 500 response in subseqent steps)
 
 - 11c. Describe the service to check if it is bound to the container endpoint
 
@@ -358,30 +359,37 @@ Reference: [Kubernetes Service](https://kubernetes.io/docs/concepts/services-net
         kubectl -n pingpong apply -f pod.yaml
 
         
-- Check the pod logs
+- 11e. Describe the service again to verify the endpoints is now set to the pod IP
 
-        kubectl logs -f pingapi -n pingpong
+- 11f. Access the ping service
 
-- Access the ping service
+    - Dont forget to port-forward in the case of local kubernetes
+    - Should see response (although it is 500)
 
-### 11. Activity: Deploy the Cache DB
+### 12. Activity: Deploy the Cache DB
+
+#### Lets fix the 500 status code - you guessed right, we need the redis service.
 
 Reference: [Kubernetes Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), [ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/)
 
         Source Path: src/k8s/3.cache
         Files: deployment.yaml, service.yaml
 
-- Submit a redis deployment and a internal service to the cluster
+- 12a. Submit a redis deployment and a internal service to the cluster
 
-        kubectl -n pingpong create -f ./
-
-        kubectl -n pingpong get pods
+    - Create deploynent
         
-        kubectl -n pingpong get svc redis
+            kubectl -n pingpong create -f ./
+    - Verify Pod
+    
+            kubectl -n pingpong get pods
+    - Verify service     
+            
+            kubectl -n pingpong get svc redis
 
-        Note: No external IP
+        Note: No external IP for redis service, refer our [architecture diagram](../docs/k8s-samplesolution.png)
 
-- Scale the cache replicasets to 3 replicas
+- 12b. Scale the cache replicasets to 3 replicas
 
         kubectl -n pingpong scale deployment redis --replicas=3
 
@@ -389,16 +397,21 @@ Reference: [Kubernetes Deployment](https://kubernetes.io/docs/concepts/workloads
 
         kubectl -n pingpong get pods
 
-- Check the ping service http://<external-ip>:8090/ping/1
+- 12c. Check the ping service
+    - AKS
+ 
+          http://<external-ip>:8090/ping/1
 
-### 12. Optional  Cross Namespace Service Access
+    - Local Kubernetes (DockerDesktop)
 
-Deploy redis to a different namespace and make the ping service work with that cache
+        -      kubectl -n pingpong port-forward service/pingservice 8090:8090
 
-- Delete redis deployment and service in pingpong ns
-- Create redis deployment in another ns, say "cache"
+       - [Link](http://localhost:8090/ping/1) -     
+         http://localhost:8090/ping/1
+         
+         http://localhost:8090/ping/2
 
-        Hint: Access pattern: {servicename}.{ns}.svc:port
+     - Ping service should work now
 
 ### 13. Deploy the Pong Service
 
@@ -464,3 +477,22 @@ Now, you will add a ServiceAccount to the PingApi Pod and project the token as a
 - Copy the token and view its content - [jwt.ms](https://jwt.ms)
 
 ![Alt text](psat.jpg)
+
+### 15. Optional Activity: Cross Namespace Service Access
+
+Deploy redis to a different namespace and make the ping service work with that cache
+
+- Delete redis deployment and service in pingpong ns
+- Create redis deployment in another ns, say "cache"
+
+        Hint: Access pattern: {servicename}.{ns}.svc:port
+
+### 16. Optional Activity: Create an Ingress for the ping K8s service
+
+Note: Service type will be ClusterIP
+
+Reference: [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/), [Ingress Controller](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/)
+
+#### Options:
+- [NGINX Ingress](https://kubernetes.github.io/ingress-nginx/user-guide/basic-usage/)
+- [Azure Application Gateway ](https://learn.microsoft.com/en-us/azure/application-gateway/ingress-controller-overview)
