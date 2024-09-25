@@ -8,6 +8,7 @@ metadata:
 spec:
   selector:
     name: redis 
+    tier: cache
   ports:
    - port: 6379
      targetPort: 6379

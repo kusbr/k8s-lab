@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pingapi
+  namespace: pingpong
+spec:
+  selector:
+    matchLabels:
+      name: ping
+      tier: 
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: ping
+        tier: 
+    spec:
+      containers:
+      - name: ping
+        image: <pingservice imagename>
+        ports:
+        - name: tcp
+          containerPort: 8090
+        env:
+        - name: CACHE_TYPE
+          value: redis
+        - name: CACHE_HOST
+          value: redis
+        - name: CACHE_PORT
+          value: "6379"
