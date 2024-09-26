@@ -249,7 +249,7 @@ You will deploy the ping app using a "pod" manifest
 
 - Schedule the ping deployment. 
 
-        kubectl create -f pod.yaml -n pingpong
+        kubectl create -f deployment.yaml -n pingpong
 
 - Verify if the deployment and pod resources are created
 
